@@ -20,7 +20,26 @@ workspace:
       value: 
         - name: "Clone the git repository, if it doesn't exist"
           env:
-            GIT_REMOTE: https://github.com/cdr/link
+            GIT_REMOTE: git@github.com:cdr/link.git
+            CLONE_TO: /home/coder/link
+          command: |
+            # Check if the project directory already exists 
+            if [ ! -d $CLONE_TO ]; then
+              # 1. ensure we have GitHub's host key added to known_hosts
+              touch ~/.ssh/known_hosts
+              if ! grep github.com ~/.ssh/known_hosts > /dev/null; then
+                ssh-keyscan github.com >> ~/.ssh/known_hosts 2> /dev/null
+              fi
+              
+              2. Clone the project
+              echo "$CLONE_TO is empty... Cloning"
+              git clone $GIT_REMOTE $CLONE_TO
+            else
+              echo "$CLONE_TO exists ✅"
+            fi
+        - name: "Clone the git repository, if it doesn't exist"
+          env:
+            GIT_REMOTE: git@github.com:bpmct/link-dev.git
             CLONE_TO: /home/coder/link
           command: |
             # Check if the project directory already exists 
