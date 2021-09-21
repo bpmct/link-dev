@@ -5,6 +5,16 @@ FROM codercom/enterprise-base:ubuntu
 
 USER root
 
+# Install go 1.17.1
+RUN curl -L "https://dl.google.com/go/go1.17.1.linux-amd64.tar.gz" | tar -C /usr/local -xzvf -
+
+# Setup go env vars
+ENV GOROOT /usr/local/go
+ENV PATH $PATH:$GOROOT/bin
+ENV GOPATH /home/coder/go
+ENV GOBIN $GOPATH/bin
+ENV PATH $PATH:$GOBIN
+
 # Set NVM_DIR outside of the home directory so it doesn't persist across rebuilds
 ENV NVM_DIR=/usr/bin/nvm
 RUN mkdir -p $NVM_DIR
@@ -21,16 +31,6 @@ RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.37.2/install.sh | b
     && nvm use default \
     # Install global packages on the default version of node
     && npm install --global yarn
-  
-# Install go 1.17.1
-RUN curl -L "https://dl.google.com/go/go1.17.1.linux-amd64.tar.gz" | tar -C /usr/local -xzvf -
-
-# Setup go env vars
-ENV GOROOT /usr/local/go
-ENV PATH $PATH:$GOROOT/bin
-ENV GOPATH /home/coder/go
-ENV GOBIN $GOPATH/bin
-ENV PATH $PATH:$GOBIN
 
 
 # Copy configure script (we need this to add nvm to our path)
